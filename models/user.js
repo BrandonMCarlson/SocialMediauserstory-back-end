@@ -5,10 +5,14 @@ const config = require('config');
 const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
-  name: { type: String, required: true, minLength: 5, maxLength: 50 },
+  firstName: { type: String, required: true, minlength: 2, maxLength: 50},
+  lastName: { type: String, required: true, minlength: 2, maxLength: 50},
+  aboutMe: { type: String, required: false, minlength: 5, maxlength: 1024, default: ""},
   email: { type: String, unique: true, required: true, minLength: 5, maxLength: 255 },
   password: {type: String, required: true, maxLength: 1024, minLength: 5 },
-  shoppingCart: { type: [productSchema], default: [] },
+  friendsList: { type: [/*profileScema*/], default: [] },
+  pendingRequest: { type: [], default: []},
+  post: { type: [], default [] },
   isAdmin: { type: Boolean, default: false },
 })
 
@@ -21,7 +25,6 @@ const User = mongoose.model('User', userSchema)
 
 const validateUser = (user) => {
   const schema = Joi.object({
-    name: Joi.string().min(5).max(50).required(),
     email: Joi.string().min(5).max(255).required().email(),
     password: Joi.string().min(5).max(1024).required(),
   })
