@@ -1,4 +1,4 @@
-const { User, validate } = require('../models/user')
+const { User, validateUser } = require('../models/user')
 const { Product, validateProduct } = require('../models/products')
 const express = require('express')
 const auth = require('../middleware/auth');
@@ -34,7 +34,7 @@ router.post('/:userId/shoppingcart/:productId', auth, async (req, res) => {
 
 router.put('/:userId/shoppingcart/:productId', auth, async (req, res) => {
   try {
-    const { error } = validate(req.body)
+    const { error } = validateUser(req.body)
     if (error) return res.status(400).send(error)
 
     const user = await User.findById(req.params.userId)
@@ -88,7 +88,7 @@ router.delete('/:userId/shoppingcart/:productId', auth, async (req, res) => {
 
 router.post('/', async (req, res) => {
   try{
-    const { error } = validate(req.body);
+    const { error } = validateUser(req.body);
 
     if (error) return res.status(400).send(error.details[0].message);
 
@@ -97,10 +97,11 @@ router.post('/', async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     user = new User({
-      name: req.body.name,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      aboutMe: "",
       email: req.body.email,
-      password: await bcrypt.hash(req.body.password, salt),
-
+      password: await bcrypt.hash(req.body.password, salt)
     });
 
     await user.save();
@@ -110,7 +111,7 @@ router.post('/', async (req, res) => {
        return res
        .header('x-auth-token', token)
        .header('access-control-expose-headers', 'x-auth-token')
-       .send({ _id: user._id, name: user.name, email: user.email });
+       .send({ _id: user._id, firstName: user.firstName, email: user.email });
   } catch (ex) {
     return res.status(500).send(`Internal Server Error: ${ex}`);
   }
