@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
 })
 
 userSchema.methods.generateAuthToken = function () {
-  return jwt.sign({ _id: this._id, firstName: this.firstName, email: this.email, isAdmin: this.isAdmin }, config.get('jwtSecret'));
+  return jwt.sign({ _id: this._id, email: this.email, isAdmin: this.isAdmin }, config.get('jwtSecret'));
  };
  
 
@@ -51,6 +51,7 @@ const validateUser = (user) => {
   });
   return schema.validate(user);
 }
+
 const validateLogin = (req) => {
   const schema = Joi.object({
     email: Joi.string().min(5).max(255).required().email(),

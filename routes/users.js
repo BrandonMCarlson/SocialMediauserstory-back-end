@@ -62,7 +62,7 @@ router.post("/login",  async (req, res) => {
 });
 
 //get all users
-router.get("/",   async (req, res) => {
+router.get("/", auth,  async (req, res) => {
   try {
     const users = await User.find();
     return res.send(users);
@@ -98,15 +98,15 @@ router.put('/:userId', auth, async (req, res) => {
         `The user with id: "${req.params.userId}" does not exist.`
         )
   
-      user.firstName = req.body.name
-      user.lastName = req.body.description
-      user.aboutMe = req.body.category
-      user.email = req.body.price
-      user.password = req.body.password
-      user.friendList = req.body.friendList
-      user.pendingRequest = req.body.pendingRequest
-      user.post = req.body.post
-      user.isAdmin = req.body.isAdmin
+      user.firstName = req.body.firstName;
+      user.lastName = req.body.lastName;
+      user.aboutMe = req.body.aboutMe;
+      user.email = req.body.email;
+      user.password = req.body.password;
+      user.friendList = req.body.friendList;
+      user.pendingRequest = req.body.pendingRequest;
+      user.posts = req.body.posts;
+      user.isAdmin = req.body.isAdmin;
   
       await user.save()
       return res.send(user)
