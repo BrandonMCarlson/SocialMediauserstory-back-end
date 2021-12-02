@@ -201,14 +201,14 @@ router.delete("/:userId/posts/:postId", [auth], async (req, res) => {
         .status(400)
         .send(`User with id ${req.params.userId} does not exist!`);
 
-    const post = await Post.findById(req.params.postId);
+    const post = user.posts.id(req.params.postId);
     if(!post)
       return res
         .status(400)
         .send(`Post with id ${req.params.postId} does not exist!`);
 
-    await user.posts.post.remove();
-    return res.send(user);
+    await post.remove();
+    return res.send(post);
   } catch (ex) {
     return res.status(500).send(`Internal Server Error: ${ex}`);
   }
