@@ -1,8 +1,10 @@
-const multer = require('multer');
+// const multer = require('multer');
 
 
-app.use(multer({ dest: './uploads/',
-    rename: function (fieldname, filename) {
-      return filename;
-    },
-  }));
+// app.use(multer({ dest: './uploads/',
+//     rename: function (fieldname, filename) {
+//       return filename;
+//     },
+//   }));
+
+// module.exports = image;

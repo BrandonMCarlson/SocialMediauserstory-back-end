@@ -4,6 +4,7 @@ const connectDB = require('./startup/db');
 const users = require('./routes/users');
 const products = require('./routes/products');
 const auth = require('./routes/auth');
+// const images = require('./routes/images');
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use('/api/users', users);
 app.use('/api/auth', auth);
 app.use('/api/products', products);
+// app.use('./api/images', images);
 
 const port = process.env.PORT || 5000
 app.listen(port, () => {

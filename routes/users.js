@@ -6,6 +6,16 @@ const bcrypt = require('bcrypt');
 const router = express.Router()
 
 // add
+
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.find();
+    return res.send(users);
+  } catch (ex) {
+    return res.status(500).send(`Internal Server Error: ${ex}`);
+  }
+});
+
 router.post('/:userId/shoppingcart/:productId', auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.userId)
