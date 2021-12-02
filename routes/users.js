@@ -1,12 +1,11 @@
 const { User, Post, validateUser, validateLogin, validatePost } = require('../models/user')
-const { Product, validateProduct } = require('../models/products')
 const express = require('express')
 const auth = require('../middleware/auth');
 const bcrypt = require('bcrypt');
 const router = express.Router()
 const admin = require('../middleware/admin'); 
-// add
 
+//get all users
 router.get("/", async (req, res) => {
   try {
     const users = await User.find();
@@ -37,8 +36,8 @@ router.post("/login", async (req, res) => {
     return res.status(500).send(`Internal Server Error: ${ex}`);
   }
 });
-// put/update
 
+// put - updates a user
 router.put('/:userId', auth, async (req, res) => {
     try {
       const { error } = validateUser(req.body)
@@ -66,8 +65,7 @@ router.put('/:userId', auth, async (req, res) => {
   }
 })
 
-// delete
-
+// deletes a user
 router.delete("/:userId", [auth], async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
@@ -83,7 +81,6 @@ router.delete("/:userId", [auth], async (req, res) => {
 });
 
 // add user
-
 router.post('/', async (req, res) => {
   try{
     const { error } = validateUser(req.body);
@@ -115,6 +112,7 @@ router.post('/', async (req, res) => {
   }
 })
 
+//adds a post to a user's array of post
 router.post('/:userId/posts', [auth], async (req, res) => {
   try {
     const { error } = validatePost(req.body)
