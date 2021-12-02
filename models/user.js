@@ -3,11 +3,14 @@ const { productSchema } = require('../models/products');
 const Joi = require('joi');
 const config = require('config');
 const jwt = require('jsonwebtoken');
+const { number } = require('joi');
 
 const postSchema = new mongoose.Schema({
   body: { type: String, required: true, minlength: 2, maxLength: 255 },
   picture: {data: Buffer, contentType: String},
   dateModified: { type: Date, default: Date.now },
+  likes: {type: Number, default: 0},
+  disLikes: {type: Number, default: 0},
 })
 
 const Post = mongoose.model('Post', postSchema)
