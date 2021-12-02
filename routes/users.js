@@ -17,6 +17,21 @@ router.get("/", async (req, res) => {
   }
 });
 
+//get a users
+router.get("/:userId", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user)
+      return res
+        .status(400)
+        .send(`User with id ${req.params.userId} does not exist!`);
+    const users = await User.find();
+    return res.send(user);
+  } catch (ex) {
+    return res.status(500).send(`Internal Server Error: ${ex}`);
+  }
+});
+
 router.post("/login", async (req, res) => {
   try {
     const { error } = validateLogin(req.body);
@@ -140,7 +155,7 @@ router.post('/:userId/posts', [auth], async (req, res) => {
   }
 })
 
-//get all users
+//get all posts
 router.get("/:userId/posts", async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
@@ -169,7 +184,7 @@ router.delete("/:userId/posts/:postId", [auth], async (req, res) => {
         .status(400)
         .send(`Post with id ${req.params.postId} does not exist!`);
 
-    await post.remove();
+    await user.posts.post.remove();
     return res.send(user);
   } catch (ex) {
     return res.status(500).send(`Internal Server Error: ${ex}`);
