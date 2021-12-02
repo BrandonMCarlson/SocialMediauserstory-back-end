@@ -18,14 +18,13 @@ router.get("/", async (req, res) => {
 });
 
 //get a users
-router.get("/:userId", async (req, res) => {
+router.get("/:userId", auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
     if (!user)
       return res
         .status(400)
         .send(`User with id ${req.params.userId} does not exist!`);
-    const users = await User.find();
     return res.send(user);
   } catch (ex) {
     return res.status(500).send(`Internal Server Error: ${ex}`);
@@ -170,6 +169,30 @@ router.get("/:userId/posts", async (req, res) => {
   }
 });
 
+//get a single post
+router.get("/:userId/posts/:postId", async (req, res) => {
+  try {  
+    const user = await User.findById(req.params.userId);
+    if (!user)
+      return res
+        .status(400)
+        .send(`The user with id "${req.params.userId}" does not exist.`);
+
+    const post = user.posts.id(req.params.postId);
+    if (!post)
+      return res
+        .status(400)
+        .send(
+          `The post with id "${req.params.productId}" does not in the users shopping cart.`
+        );
+
+    return res.send(post);
+  } catch (ex) {
+    return res.status(500).send(`Internal Server Error: ${ex}`);
+  }
+});
+
+
 router.delete("/:userId/posts/:postId", [auth], async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
@@ -190,5 +213,7 @@ router.delete("/:userId/posts/:postId", [auth], async (req, res) => {
     return res.status(500).send(`Internal Server Error: ${ex}`);
   }
 });
+
+
 
 module.exports = router
