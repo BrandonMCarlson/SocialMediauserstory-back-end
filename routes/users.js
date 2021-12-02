@@ -40,32 +40,31 @@ router.post("/login", async (req, res) => {
 });
 // put/update
 
-router.put('/:userId/shoppingcart/:productId', auth, async (req, res) => {
-  try {
-    const { error } = validateUser(req.body)
-    if (error) return res.status(400).send(error)
-
-    const user = await User.findById(req.params.userId)
-    if (!user) return res.status(400).send(
-      `The user with id: "${req.params.userId}" does not exist.`
-      )
-
-    const product = user.shoppingCart.id(req.params.productId)
-    if (!product) return res.status(400).send(
-      `The product with id: "${req.params.productId}" does not exist in the users shopping cart.`
-      )
-
-    product.name = req.body.name
-    product.description = req.body.description
-    product.category = req.body.category
-    product.price = req.body.price
-    product.dateModified = Date.now()
-
-    await user.save()
-    return res.send(product)
-  } catch (ex) {
-    return res.status(500).send(`Internal Server Error: ${ex}`)
-  }
+router.put('/:userId', auth, async (req, res) => {
+    try {
+      const { error } = validateUser(req.body)
+      if (error) return res.status(400).send(error)
+  
+      const user = await User.findById(req.params.userId)
+      if (!user) return res.status(400).send(
+        `The user with id: "${req.params.userId}" does not exist.`
+        )
+  
+      user.firstName = req.body.name
+      user.lastName = req.body.description
+      user.aboutMe = req.body.category
+      user.email = req.body.price
+      user.password = req.body.password
+      user.friendList = req.body.friendList
+      user.pendingRequest = req.body.pendingRequest
+      user.post = req.body.post
+      user.isAdmin = req.body.isAdmin
+  
+      await user.save()
+      return res.send(user)
+    } catch (ex) {
+      return res.status(500).send(`Internal Server Error: ${ex}`)
+  }
 })
 
 // delete
