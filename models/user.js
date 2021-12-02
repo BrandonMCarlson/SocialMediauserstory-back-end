@@ -4,15 +4,30 @@ const Joi = require('joi');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 
+const postSchema = new mongoose.Schema({
+  body: { type: String, required: true, minlength: 2, maxLength: 255 },
+  picture: {data: Buffer, contentType: String},
+  dateModified: { type: Date, default: Date.now },
+})
+
+const Post = mongoose.model('Post', postSchema)
+
+const validatePost = (post) => {
+  const schema = Joi.object({
+    body: Joi.string().min(2).max(255).required(),
+  })
+  return schema.validate(post)
+}
+
 const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true, minlength: 2, maxLength: 50},
   lastName: { type: String, required: true, minlength: 2, maxLength: 50},
   aboutMe: { type: String, required: false, minlength: 0, maxlength: 255, default: ""},
   email: { type: String, unique: true, required: true, minLength: 5, maxLength: 255 },
   password: {type: String, required: true, maxLength: 1024, minLength: 5 },
-  friendsList: { type: [/*profileScema*/], default: [] },
-  pendingRequest: { type: [], required: false, default: []},
-  post: { type: [], required: false, default: [] },
+  friendsList: [{type: mongoose.Types.ObjectId}],
+  pendingRequest: [{type: mongoose.Types.ObjectId}],
+  posts: [{ type: postSchema }],
   isAdmin: { type: Boolean, default: false },
 })
 
@@ -41,6 +56,13 @@ const validateLogin = (req) => {
   return schema.validate(req);
 };
 
+
+
+// module.exports = Product
+
+exports.Post = Post
+exports.validatePost = validatePost
+exports.postSchema = postSchema
 exports.User = User
 exports.validateUser = validateUser
 exports.validateLogin = validateLogin;

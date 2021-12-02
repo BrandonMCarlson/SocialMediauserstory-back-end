@@ -1,11 +1,10 @@
-const { User, validateUser, validateLogin } = require('../models/user')
+const { User, Post, validateUser, validateLogin, validatePost } = require('../models/user')
 const { Product, validateProduct } = require('../models/products')
 const express = require('express')
 const auth = require('../middleware/auth');
 const bcrypt = require('bcrypt');
 const router = express.Router()
-const admin = require('../middleware/admin');
-
+const admin = require('../middleware/admin'); 
 // add
 
 router.get("/", async (req, res) => {
@@ -113,6 +112,29 @@ router.post('/', async (req, res) => {
        .send({ _id: user._id, firstName: user.firstName, email: user.email });
   } catch (ex) {
     return res.status(500).send(`Internal Server Error: ${ex}`);
+  }
+})
+
+router.post('/:userId/posts', [auth], async (req, res) => {
+  try {
+    const { error } = validatePost(req.body)
+    if (error) return res.status(400).send(error)
+
+    const user = await User.findById(req.params.userId)
+    if (!user) return res.status(400).send(
+      `The user with id: "${req.params.userId}" does not exist.`
+    )
+    
+    const post = new Post({
+      body: req.body.body,
+      picture: req.body.picture,
+    })
+    user.posts.push(post)
+    await user.save()
+
+    return res.send(post)
+  } catch (ex) {
+    return res.status(500).send(`Internal Server Error: ${ex}`)
   }
 })
 
