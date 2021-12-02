@@ -1,9 +1,10 @@
-const { User, validateUser } = require('../models/user')
+const { User, validateUser, validateLogin } = require('../models/user')
 const { Product, validateProduct } = require('../models/products')
 const express = require('express')
 const auth = require('../middleware/auth');
 const bcrypt = require('bcrypt');
 const router = express.Router()
+const admin = require('../middleware/admin');
 
 // add
 
@@ -16,30 +17,27 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post('/:userId/shoppingcart/:productId', auth, async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId)
-    if (!user) return res.status(400).send(
-      `The user with id: "${req.params.userId}" does not exist`
-      )
-    
-    const product = await Product.findById(req.params.productId)
-    if (!product) return res.status(400).send(
-      `The product with id: "${req.params.productId}" does not exist.`
-      )
+    const { error } = validateLogin(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 
-    user.shoppingCart.push(product)
+    let user = await User.findOne({ email: req.body.email });
+    if (!user) return res.status(400).send(`Invalid email or password.`);
 
-    await user.save()
-    return res.send(user.shoppingCart)
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!validPassword)
+      return res.status(400).send("Invalid email or password.");
 
+    const token = user.generateAuthToken();
+    return res.send(token);
   } catch (ex) {
-    return res.status(500).send(
-      `Internal Server Error: ${ex}`
-      )
+    return res.status(500).send(`Internal Server Error: ${ex}`);
   }
-})
-
+});
 // put/update
 
 router.put('/:userId/shoppingcart/:productId', auth, async (req, res) => {
@@ -72,27 +70,19 @@ router.put('/:userId/shoppingcart/:productId', auth, async (req, res) => {
 
 // delete
 
-router.delete('/:userId/shoppingcart/:productId', auth, async (req, res) => {
-  try{
-
-  const user = await User.findById(req.params.userId)
-  if (!user) return res.status(400). send(
-    `The user with id: "${req.params.userId}" does not exist.` 
-    )
-  
-  let product = user.shoppingCart.id(req.params.productId)
-  if (!product) return res.status(400).send(
-    `The product with id: "${req.params.productId}" is not in the users shopping cart.`
-    )
-  
-  product = await product.remove()
-
-  await user.save()
-  return res.send(product)
+router.delete("/:userId", [auth], async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user)
+      return res
+        .status(400)
+        .send(`User with id ${req.params.userId} does not exist!`);
+    await user.remove();
+    return res.send(user);
   } catch (ex) {
-    return res.status(500).send(`Internal Server Error: ${ex}`)
+    return res.status(500).send(`Internal Server Error: ${ex}`);
   }
-})
+});
 
 // add user
 
