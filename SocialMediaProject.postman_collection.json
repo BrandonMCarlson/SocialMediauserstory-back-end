@@ -6,6 +6,36 @@
 	},
 	"item": [
 		{
+			"name": "Register a user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\" : \"Cust5\",\r\n    \"lastName\": \"Cust5\",\r\n    \"email\": \"Cust5@Cust5.com\",\r\n    \"password\": \"cust5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Cust1 Login",
 			"request": {
 				"method": "POST",
@@ -36,50 +66,19 @@
 			"response": []
 		},
 		{
-			"name": "Create a post in user array",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "x-auth-token",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWE2ZjUxOWYzNTdmMmY2ZmRmZWMxNWYiLCJmaXJzdE5hbWUiOiJDdXN0MSIsImVtYWlsIjoiY3VzdDFAY3VzdDEuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjM4NDYwMTc0fQ.X5lxOvjxZuKKQfX54KF0C-MS3sjqH8LISd41n5bCV24",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"body\": \"this post will be deleted\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5000/api/users/61a6f519f357f2f6fdfec15f/posts",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"users",
-						"61a6f519f357f2f6fdfec15f",
-						"posts"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Get all users",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWE2ZjUxOWYzNTdmMmY2ZmRmZWMxNWYiLCJmaXJzdE5hbWUiOiJDdXN0MSIsImVtYWlsIjoiY3VzdDFAY3VzdDEuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjM4NDc0MjA5fQ.mylbUkH4KgRHTCgaEpmrLmARmZsHTAyi5Jrc3_O6JlU",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n    \"email\": \"cust1@cust1.com\",\r\n    \"password\": \"Cust1\"\r\n}",
@@ -99,6 +98,143 @@
 					"path": [
 						"api",
 						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a single user",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWE2ZjUxOWYzNTdmMmY2ZmRmZWMxNWYiLCJmaXJzdE5hbWUiOiJDdXN0MSIsImVtYWlsIjoiY3VzdDFAY3VzdDEuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjM4NDc0MjA5fQ.mylbUkH4KgRHTCgaEpmrLmARmZsHTAyi5Jrc3_O6JlU",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users/61a6f519f357f2f6fdfec15f",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"61a6f519f357f2f6fdfec15f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit a user",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWE2ZjUxOWYzNTdmMmY2ZmRmZWMxNWYiLCJmaXJzdE5hbWUiOiJDdXN0MSIsImVtYWlsIjoiY3VzdDFAY3VzdDEuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjM4NDc0MjA5fQ.mylbUkH4KgRHTCgaEpmrLmARmZsHTAyi5Jrc3_O6JlU",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\": \"Cust5\",\r\n    \"lastName\": \"Cust5\",\r\n    \"aboutMe\": \"new about me edit\",\r\n    \"email\": \"Cust5@Cust5.com\",\r\n    \"password\": \"$2b$10$mhtgm/jMSornY9lBwaWOMu.laGLQ/eJSPkXFoMzy2k2ZTd8ZO0A5K\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/61a6f6c87b58c15c5e86f179",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"61a6f6c87b58c15c5e86f179"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a User",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWE2ZjUxOWYzNTdmMmY2ZmRmZWMxNWYiLCJmaXJzdE5hbWUiOiJDdXN0MSIsImVtYWlsIjoiY3VzdDFAY3VzdDEuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjM4NDc0MjA5fQ.mylbUkH4KgRHTCgaEpmrLmARmZsHTAyi5Jrc3_O6JlU",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"body\":\"test post\",\r\n    \"likes\": 9001\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/61a92590d16c325a665b245b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"61a92590d16c325a665b245b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a post",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWE2ZjUxOWYzNTdmMmY2ZmRmZWMxNWYiLCJmaXJzdE5hbWUiOiJDdXN0MSIsImVtYWlsIjoiY3VzdDFAY3VzdDEuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjM4NDc0MjA5fQ.mylbUkH4KgRHTCgaEpmrLmARmZsHTAyi5Jrc3_O6JlU",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"body\":\"test post\",\r\n    \"likes\": 9001\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/users/61a6f519f357f2f6fdfec15f/posts/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"61a6f519f357f2f6fdfec15f",
+						"posts",
 						""
 					]
 				}
@@ -164,35 +300,6 @@
 			"response": []
 		},
 		{
-			"name": "Delete a Post",
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "x-auth-token",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWE2ZjUxOWYzNTdmMmY2ZmRmZWMxNWYiLCJmaXJzdE5hbWUiOiJDdXN0MSIsImVtYWlsIjoiY3VzdDFAY3VzdDEuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjM4NDYwMTc0fQ.X5lxOvjxZuKKQfX54KF0C-MS3sjqH8LISd41n5bCV24",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "http://localhost:5000/api/users/61a6f519f357f2f6fdfec15f/posts/61a9186acd5cb019f70dcf62",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"api",
-						"users",
-						"61a6f519f357f2f6fdfec15f",
-						"posts",
-						"61a9186acd5cb019f70dcf62"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Edit a post",
 			"request": {
 				"method": "PUT",
@@ -219,6 +326,35 @@
 						"61a6f519f357f2f6fdfec15f",
 						"posts",
 						"61a84633e49c58dbecb5f2fd"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a Post",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWE2ZjUxOWYzNTdmMmY2ZmRmZWMxNWYiLCJmaXJzdE5hbWUiOiJDdXN0MSIsImVtYWlsIjoiY3VzdDFAY3VzdDEuY29tIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjM4NDYwMTc0fQ.X5lxOvjxZuKKQfX54KF0C-MS3sjqH8LISd41n5bCV24",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/users/61a6f519f357f2f6fdfec15f/posts/61a9186acd5cb019f70dcf62",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"users",
+						"61a6f519f357f2f6fdfec15f",
+						"posts",
+						"61a9186acd5cb019f70dcf62"
 					]
 				}
 			},
