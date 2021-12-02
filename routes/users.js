@@ -5,6 +5,8 @@ const bcrypt = require('bcrypt');
 const router = express.Router()
 const admin = require('../middleware/admin'); 
 
+//USER Section
+
 //get all users
 router.get("/", async (req, res) => {
   try {
@@ -112,6 +114,8 @@ router.post('/', async (req, res) => {
   }
 })
 
+//POSTS section
+
 //adds a post to a user's array of post
 router.post('/:userId/posts', [auth], async (req, res) => {
   try {
@@ -135,5 +139,41 @@ router.post('/:userId/posts', [auth], async (req, res) => {
     return res.status(500).send(`Internal Server Error: ${ex}`)
   }
 })
+
+//get all users
+router.get("/:userId/posts", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user)
+      return res
+        .status(400)
+        .send(`User with id ${req.params.userId} does not exist!`);
+
+    return res.send(user.posts);
+  } catch (ex) {
+    return res.status(500).send(`Internal Server Error: ${ex}`);
+  }
+});
+
+router.delete("/:userId/posts/:postId", [auth], async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user)
+      return res
+        .status(400)
+        .send(`User with id ${req.params.userId} does not exist!`);
+
+    const post = await Post.findById(req.params.postId);
+    if(!post)
+      return res
+        .status(400)
+        .send(`Post with id ${req.params.postId} does not exist!`);
+
+    await post.remove();
+    return res.send(user);
+  } catch (ex) {
+    return res.status(500).send(`Internal Server Error: ${ex}`);
+  }
+});
 
 module.exports = router
