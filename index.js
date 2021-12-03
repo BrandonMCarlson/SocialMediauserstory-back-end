@@ -3,7 +3,11 @@ const cors = require('cors');
 const connectDB = require('./startup/db');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
-// const images = require('./routes/images');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose')
+const fs = require('fs');
+const path = require('path');
+require('dotenv/config');
 
 const app = express();
 
@@ -13,11 +17,13 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/users', users);
 app.use('/api/auth', auth);
-// app.use('./api/images', images);
+app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.json());
+
+app.set("view engine", "ejs");
 
 const port = process.env.PORT || 5000
 app.listen(port, () => {
   console.log(`Server started on port: ${port}`);
 });
 
- 

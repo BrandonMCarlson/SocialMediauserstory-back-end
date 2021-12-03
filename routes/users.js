@@ -4,7 +4,7 @@ const auth = require('../middleware/auth');
 const bcrypt = require('bcrypt');
 const router = express.Router()
 const admin = require('../middleware/admin'); 
-
+const imageMid = require('../middleware/image')
 //USER Section
 
 // add user
@@ -134,7 +134,7 @@ router.delete("/:userId", auth, async (req, res) => {
 //POSTS section
 
 //adds a post to a user's array of post
-router.post('/:userId/posts', [auth], async (req, res) => {
+router.post('/:userId/posts', [auth, imageMid], async (req, res) => {
   try {
     const { error } = validatePost(req.body)
     if (error) return res.status(400).send(error)
@@ -146,7 +146,10 @@ router.post('/:userId/posts', [auth], async (req, res) => {
     
     const post = new Post({
       body: req.body.body,
-      picture: req.body.picture,
+      img: {
+        data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+        contentType: 'image/png'
+    }
     })
     user.posts.push(post)
     await user.save()

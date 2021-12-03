@@ -1,25 +1,22 @@
-// const Joi = require("joi");
-// const mongoose = require("mongoose");
+const Joi = require("joi");
+const mongoose = require("mongoose");
 
 
 
-// const ImageSchema = new mongoose.Schema({
-//     img: {
-//         data: Buffer,
-//         contentType: String
-//     }
-// }
-// );
+// Step 3 - this is the code for ./models.js
 
-// const Image = mongoose.model('Image', ImageSchema);
+var mongoose = require('mongoose');
 
-// const validateImage = (image) => {
-//     const schema = Joi.object({
-//         data: Joi.string().required(),
-//         contentType: Joi.string().required(),
-//     })
-//     return schema.validate(image)
-// }
+var imageSchema = new mongoose.Schema({
+	name: String,
+	desc: String,
+	img:
+	{
+		data: Buffer,
+		contentType: String
+	}
+});
 
-// exports.Image=Image;
-// exports.validateImage=validateImage;
+//Image is a model which has a schema imageSchema
+
+module.exports = new mongoose.model('Image', imageSchema);

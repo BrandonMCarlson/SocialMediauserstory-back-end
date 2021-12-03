@@ -2,6 +2,18 @@ const mongoose = require('mongoose');
 const Joi = require('joi');
 const config = require('config');
 const jwt = require('jsonwebtoken');
+const storage = require('../middleware/image');
+const upload = require('../middleware/image')
+
+const imageSchema = new mongoose.Schema({
+	name: String,
+	desc: String,
+	img:
+	{
+		data: Buffer,
+		contentType: String
+	}
+});
 
 const postSchema = new mongoose.Schema({
   body: { type: String, required: true, minlength: 2, maxLength: 255 },
@@ -70,3 +82,4 @@ exports.postSchema = postSchema
 exports.User = User
 exports.validateUser = validateUser
 exports.validateLogin = validateLogin;
+exports.imageSchema = imageSchema
