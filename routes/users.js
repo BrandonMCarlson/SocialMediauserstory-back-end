@@ -110,6 +110,8 @@ router.put('/:userId', auth, async (req, res) => {
   }
 })
 
+
+//Accept friend
 router.post("/:userId/friends/:friendId", auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
