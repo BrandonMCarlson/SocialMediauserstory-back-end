@@ -12,7 +12,7 @@ router.post('/register', async (req, res) => {
   try{
     const { error } = validateUser(req.body);
 
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send(console.log(error.details[0].message) /*error.details[0].message*/);
 
     let user = await User.findOne ({ email: req.body.email });
     if (user) return res.status(400).send('User already registered.');
@@ -21,9 +21,8 @@ router.post('/register', async (req, res) => {
     user = new User({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
-      aboutMe: "",
       email: req.body.email,
-      password: await bcrypt.hash(req.body.password, salt)
+      password: await bcrypt.hash(req.body.password, salt),
     });
 
     await user.save();
@@ -103,10 +102,6 @@ router.put('/:userId', auth, async (req, res) => {
       user.aboutMe = req.body.aboutMe;
       user.email = req.body.email;
       user.password = req.body.password;
-      user.friendList = req.body.friendList;
-      user.pendingRequest = req.body.pendingRequest;
-      user.posts = req.body.posts;
-      user.isAdmin = req.body.isAdmin;
   
       await user.save()
       return res.send(user)
@@ -114,6 +109,30 @@ router.put('/:userId', auth, async (req, res) => {
       return res.status(500).send(`Internal Server Error: ${ex}`)
   }
 })
+
+router.post("/:userId/friends/:friendId", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user)
+      return res
+        .status(400)
+        .send(`The user with id "${req.params.userId}" does not exist.`);
+    const friend = await User.findById(req.params.friendId);
+    if (!friend)
+      return res
+        .status(400)
+        .send(`The friend with id "${req.params.friendId}" does not exist.`);
+    user.friendsList.push(friend);
+    friend.friendsList.push(user);
+    await user.save();
+    await friend.save();
+    return res.send(user.friendsList);
+  } catch (ex) {
+    return res.status(500).send(`Internal Server Error: ${ex}`);
+  }
+});
+
+
 
 // deletes a user
 router.delete("/:userId", auth, async (req, res) => {
