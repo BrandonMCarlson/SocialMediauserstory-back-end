@@ -184,7 +184,7 @@ router.delete("/:userId", auth, async (req, res) => {
 //POSTS section
 
 //adds a post to a user's array of post
-router.post('/:userId/posts', [auth, imageMid], async (req, res) => {
+router.post('/:userId/posts', auth, async (req, res) => {
   try {
     const { error } = validatePost(req.body)
     if (error) return res.status(400).send(error)
@@ -196,10 +196,8 @@ router.post('/:userId/posts', [auth, imageMid], async (req, res) => {
     
     const post = new Post({
       body: req.body.body,
-      img: {
-        data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
-        contentType: 'image/png'
-    }
+      likes: req.body.likes,
+      disLikes: req.body.disLikes
     })
     user.posts.push(post)
     await user.save()
@@ -218,6 +216,24 @@ router.get("/:userId/posts", async (req, res) => {
       return res
         .status(400)
         .send(`User with id ${req.params.userId} does not exist!`);
+
+    return res.send(user.posts);
+  } catch (ex) {
+    return res.status(500).send(`Internal Server Error: ${ex}`);
+  }
+});
+
+//get all posts
+router.get("/:userId/posts/date", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user)
+      return res
+        .status(400)
+        .send(`User with id ${req.params.userId} does not exist!`);
+    user.find({}).sort({date: 'desc'}).exec((err, docs) => {
+
+    });
 
     return res.send(user.posts);
   } catch (ex) {
