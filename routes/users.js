@@ -124,11 +124,36 @@ router.post("/:userId/friends/:friendId", auth, async (req, res) => {
       return res
         .status(400)
         .send(`The friend with id "${req.params.friendId}" does not exist.`);
+    if (user.friendsList.includes(friend._id))
+      return res
+      .status(400)
+      .send(`These users are already friends!`);
     user.friendsList.push(friend);
     friend.friendsList.push(user);
     await user.save();
     await friend.save();
     return res.send(user.friendsList);
+  } catch (ex) {
+    return res.status(500).send(`Internal Server Error: ${ex}`);
+  }
+});
+
+//Send Friend Request
+router.post("/:userId/friends/:friendId", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user)
+      return res
+        .status(400)
+        .send(`The user with id "${req.params.userId}" does not exist.`);
+    const friend = await User.findById(req.params.friendId);
+    if (!friend)
+      return res
+        .status(400)
+        .send(`The friend with id "${req.params.friendId}" does not exist.`);
+    friend.pendingRequest.push(user);
+    await friend.save();
+    return res.send(friend.pendingRequest);
   } catch (ex) {
     return res.status(500).send(`Internal Server Error: ${ex}`);
   }
