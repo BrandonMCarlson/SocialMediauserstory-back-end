@@ -112,7 +112,7 @@ router.put('/:userId', auth, async (req, res) => {
 
 
 //Accept friend
-router.post("/:userId/friends/:friendId", auth, async (req, res) => {
+router.post("/:userId/pending/:friendId", auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
     if (!user)
@@ -139,7 +139,7 @@ router.post("/:userId/friends/:friendId", auth, async (req, res) => {
 });
 
 //Send Friend Request
-router.post("/:userId/friends/:friendId", auth, async (req, res) => {
+router.post("/:userId/request/:friendId", auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
     if (!user)
@@ -151,6 +151,10 @@ router.post("/:userId/friends/:friendId", auth, async (req, res) => {
       return res
         .status(400)
         .send(`The friend with id "${req.params.friendId}" does not exist.`);
+    if (user.friendsList.includes(friend._id))
+       return res
+      .status(400)
+      .send(`These users are already friends!`);
     friend.pendingRequest.push(user);
     await friend.save();
     return res.send(friend.pendingRequest);
