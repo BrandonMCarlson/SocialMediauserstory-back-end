@@ -43,6 +43,7 @@ const userSchema = new mongoose.Schema({
   friendsList: [{type: mongoose.Types.ObjectId}],
   pendingRequest: [{type: mongoose.Types.ObjectId}],
   posts: [{ type: postSchema }],
+  image: { type: String, default: ""},
   isAdmin: { type: Boolean, default: false },
 })
 
@@ -57,6 +58,7 @@ userSchema.methods.generateAuthToken = function () {
     isAdmin: this.isAdmin,
     pendingRequest: this.pendingRequest,
     friendsList: this.friendsList,
+    image: this.image,
      }, config.get('jwtSecret'));
  };
  
@@ -70,6 +72,7 @@ const validateUser = (user) => {
     aboutMe: Joi.string().min(0).max(255),
     email: Joi.string().min(5).max(255).required().email(),
     password: Joi.string().min(5).max(1024).required(),
+    image: Joi.string(),
   });
   return schema.validate(user);
 }
