@@ -54,7 +54,9 @@ userSchema.methods.generateAuthToken = function () {
     aboutMe: this.aboutMe,
     email: this.email,
     password: this.password,
-    isAdmin: this.isAdmin
+    isAdmin: this.isAdmin,
+    pendingRequest: this.pendingRequest,
+    friendsList: this.friendsList,
      }, config.get('jwtSecret'));
  };
  

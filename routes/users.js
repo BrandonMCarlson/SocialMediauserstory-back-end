@@ -158,6 +158,7 @@ router.post("/:userId/pending/:friendId", auth, async (req, res) => {
         .status(400)
         .send(`The user with id "${req.params.userId}" does not exist.`);
     const friend = await User.findById(req.params.friendId);
+    const denied = (index) => index === req.params.friendId;
     if (!friend)
       return res
         .status(400)
@@ -168,6 +169,8 @@ router.post("/:userId/pending/:friendId", auth, async (req, res) => {
       .send(`These users are already friends!`);
     user.friendsList.push(friend);
     friend.friendsList.push(user);
+    const removeReq = user.pendingRequest.findIndex(denied)
+    user.pendingRequest.splice(removeReq, 1)
     await user.save();
     await friend.save();
     return res.send(user.friendsList);
