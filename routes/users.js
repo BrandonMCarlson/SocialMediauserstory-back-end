@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const router = express.Router()
 const admin = require('../middleware/admin'); 
 const imageMid = require('../middleware/image')
+const fileUpload = require('../middleware/file-upload');
 //USER Section
 
 
@@ -170,6 +171,27 @@ router.post("/:userId/pending/:friendId", auth, async (req, res) => {
     await user.save();
     await friend.save();
     return res.send(user.friendsList);
+  } catch (ex) {
+    return res.status(500).send(`Internal Server Error: ${ex}`);
+  }
+});
+
+//remove request
+router.delete("/:userId/remove/:friendId", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user)
+      return res
+        .status(400)
+        .send(`The user with id "${req.params.userId}" does not exist.`);
+        const denied = (index) => index === req.params.friendId;
+    if (!denied)
+      return res
+        .status(400)
+        .send(`The friend with id "${req.params.friendId}" does not exist.`);
+        user.pendingRequest.splice(denied, 1)
+    await user.save();
+    return res.send(user.pendingRequest);
   } catch (ex) {
     return res.status(500).send(`Internal Server Error: ${ex}`);
   }
