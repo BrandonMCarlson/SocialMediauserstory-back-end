@@ -7,6 +7,43 @@ const admin = require('../middleware/admin');
 const imageMid = require('../middleware/image')
 //USER Section
 
+
+//PASCAL GUIDE - creates new user and uploads image via middleware!!!!
+router.post("/register", 
+  fileUpload.single("image"), 
+  async (req, res) => {
+    try {
+      const {error} = validateUser(req.body);
+      if (error) return res.status(400).send(error.details[0].message);
+      let user = await User.findOne({email: req.body.email});
+      if (user) return res.status(400).send('User already registered.');
+      const salt = await bcrypt.genSalt(10);
+      user = new User({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        password: await bcrypt.hash(req.body.password, salt),
+        image: req.file.path
+      });
+      await user.save();
+      const token = user.generateAuthToken();
+      return res
+        .header("x-auth-token", token)
+        .header("access-control-expose-hdeaders", "x-auth-token")
+        .send({
+          _id: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          image: user.image,
+        });
+    }catch (ex) {
+      return res.status(500).send(`Internal Server Error: ${ex}`);
+    }
+  });
+
+
+
 // add user
 router.post('/register', async (req, res) => {
   try{
@@ -61,7 +98,7 @@ router.post("/login",  async (req, res) => {
 });
 
 //get all users
-router.get("/", auth,  async (req, res) => {
+router.get("/",  async (req, res) => {
   try {
     const users = await User.find();
     return res.send(users);
@@ -217,7 +254,7 @@ router.get("/:userId/posts", async (req, res) => {
         .status(400)
         .send(`User with id ${req.params.userId} does not exist!`);
 
-    return res.send(user.posts);
+    return res.send(user.posts).sort('-dateModified');
   } catch (ex) {
     return res.status(500).send(`Internal Server Error: ${ex}`);
   }
@@ -231,7 +268,8 @@ router.get("/:userId/posts/date", async (req, res) => {
       return res
         .status(400)
         .send(`User with id ${req.params.userId} does not exist!`);
-    user.find({}).sort({date: 'desc'}).exec((err, docs) => {
+  
+  user.posts = await User.find().sort({date: 'desc'}).exec((err, docs) => {
 
     });
 
