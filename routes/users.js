@@ -189,7 +189,8 @@ router.delete("/:userId/remove/:friendId", auth, async (req, res) => {
       return res
         .status(400)
         .send(`The friend with id "${req.params.friendId}" does not exist.`);
-        user.pendingRequest.splice(denied, 1)
+        const removeReq = user.pendingRequest.findIndex(denied)
+        user.pendingRequest.splice(removeReq, 1)
     await user.save();
     return res.send(user.pendingRequest);
   } catch (ex) {
