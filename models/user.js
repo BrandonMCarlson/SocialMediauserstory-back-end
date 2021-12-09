@@ -59,6 +59,7 @@ userSchema.methods.generateAuthToken = function () {
     pendingRequest: this.pendingRequest,
     friendsList: this.friendsList,
     image: this.image,
+    posts: this.posts,
      }, config.get('jwtSecret'));
  };
  
